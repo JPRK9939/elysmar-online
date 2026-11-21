@@ -1,0 +1,7 @@
+{
+  "port": 8080,
+  "googleClientId": "",
+  "sheetWebhookUrl": "",
+  "sheetSecret": "change-me-to-a-random-string",
+  "logResume": false
+}

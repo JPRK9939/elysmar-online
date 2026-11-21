@@ -1,0 +1,15 @@
+{
+  "name": "elysmar-online",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Elysmar Online — 3D open-world isekai RPG (browser client + Node.js server)",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

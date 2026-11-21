@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elysmar Online</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Mitr:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game"></div>
+
+<!-- ===== Title / Auth ===== -->
+<div id="screen-login" class="screen">
+  <div class="title-wrap">
+    <div class="logo">Elysmar<span>Online</span></div>
+    <div class="tag">ต่างโลกใต้ม่านรัตติกาล · ค้นหาว่าเจ้าคือแสง หรือความมืด</div>
+  </div>
+  <div class="card auth-card">
+    <div class="tabs"><button data-tab="login" class="on">เข้าสู่ระบบ</button><button data-tab="register">สมัครสมาชิก</button></div>
+    <label>เบอร์โทรศัพท์<input id="in-phone" type="tel" placeholder="08x-xxx-xxxx" autocomplete="tel"></label>
+    <label>รหัสผ่าน<input id="in-pass" type="password" placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="current-password"></label>
+    <label id="lbl-pass2" class="hidden">ยืนยันรหัสผ่าน<input id="in-pass2" type="password"></label>
+    <button id="btn-auth" class="primary">เข้าสู่ระบบ</button>
+    <div class="or"><span>หรือ</span></div>
+    <div id="google-btn"></div>
+    <div id="google-off" class="muted small hidden">Google Sign-In ยังไม่ได้ตั้งค่า (ใส่ googleClientId ใน server/config.json)</div>
+    <button id="btn-offline" class="ghost">▶ เล่นออฟไลน์ (บันทึกในเครื่อง)</button>
+    <div id="auth-msg" class="msg"></div>
+    <div id="conn-status" class="muted small"></div>
+  </div>
+</div>
+
+<!-- ===== Server select ===== -->
+<div id="screen-servers" class="screen hidden">
+  <div class="card wide">
+    <h2>เลือกเซิร์ฟเวอร์</h2>
+    <div class="muted small" id="acct-label"></div>
+    <div id="server-list" class="server-list"></div>
+    <button id="btn-logout" class="ghost">ออกจากระบบ</button>
+  </div>
+</div>
+
+<!-- ===== Character create ===== -->
+<div id="screen-create" class="screen hidden">
+  <div class="card create-card">
+    <h2>สร้างตัวละคร</h2>
+    <div class="muted small">อาชีพจะไม่ได้ถูกเลือกตอนนี้ — มันจะเปลี่ยนไปตามสิ่งที่คุณทำในโลกนี้</div>
+    <label>ชื่อตัวละคร<input id="in-name" maxlength="16" placeholder="2-16 ตัวอักษร"></label>
+    <div class="row"><span>สีผม</span><div class="swatches" data-k="hair"></div></div>
+    <div class="row"><span>สีผิว</span><div class="swatches" data-k="skin"></div></div>
+    <div class="row"><span>ชุด</span><div class="swatches" data-k="cloth"></div></div>
+    <div class="row"><span>ทรงผม</span><div class="opts" data-k="style"><button data-v="0" class="on">สั้น</button><button data-v="1">ยาว</button><button data-v="2">หางม้า</button><button data-v="3">ทวินเทล</button></div></div>
+    <div class="row"><span>หู</span><div class="opts" data-k="ears"><button data-v="0" class="on">มนุษย์</button><button data-v="1">เอลฟ์</button></div></div>
+    <div class="muted small">ลากเมาส์บนตัวละครเพื่อหมุนดู 360°</div>
+    <button id="btn-create" class="primary">เริ่มการเดินทาง</button>
+    <div id="create-msg" class="msg"></div>
+  </div>
+</div>
+
+<div id="screen-loading" class="screen hidden"><div class="loader"><div class="spin"></div><div id="loading-text">กำลังสร้างโลก...</div></div></div>
+
+<!-- ===== HUD ===== -->
+<div id="hud" class="hidden">
+  <div id="player-frame">
+    <div class="pf-top"><span id="pf-name"></span><span id="pf-lv"></span></div>
+    <div id="pf-class"></div>
+    <div class="bar hp"><i></i><b></b></div>
+    <div class="bar mp"><i></i><b></b></div>
+    <div class="bar xp"><i></i><b></b></div>
+    <div id="pf-align"><span>☀</span><div class="align-bar"><i></i></div><span>☾</span></div>
+    <div id="pf-gold"></div>
+  </div>
+  <div id="party-frame"></div>
+  <div id="target-frame" class="hidden"><div id="tf-name"></div><div class="bar hp"><i></i><b></b></div></div>
+  <div id="zone-name"></div>
+  <div id="minimap-wrap"><canvas id="minimap" width="180" height="180"></canvas><div id="mm-coords"></div><div id="server-tag"></div></div>
+  <div id="quest-tracker"></div>
+  <div id="skillbar"></div>
+  <div id="castbar" class="hidden"><i></i><span></span></div>
+  <div id="interact-hint" class="hidden"></div>
+  <div id="chat">
+    <div id="chat-log"></div>
+    <div class="chat-in"><select id="chat-ch"><option value="all">ทั้งหมด</option><option value="party">ปาร์ตี้</option></select><input id="chat-input" placeholder="Enter เพื่อแชท · /w ชื่อ ข้อความ · /party ชื่อ · /trade ชื่อ" maxlength="200"></div>
+  </div>
+  <div id="menu-buttons">
+    <button data-p="inv" title="I">🎒<small>I</small></button>
+    <button data-p="char" title="K">🧑<small>K</small></button>
+    <button data-p="craft" title="O">🔨<small>O</small></button>
+    <button data-p="journal" title="J">📖<small>J</small></button>
+    <button data-p="social" title="P">👥<small>P</small></button>
+    <button data-p="map" title="M">🗺️<small>M</small></button>
+    <button data-p="help" title="H">❔<small>H</small></button>
+  </div>
+  <div id="notify"></div>
+  <div id="center-msg"></div>
+  <div id="dmg-layer"></div>
+  <div id="name-layer"></div>
+  <div id="panels"></div>
+  <div id="death" class="hidden"><h1>คุณหมดสติ...</h1><button id="btn-respawn" class="primary">ฟื้นที่หมู่บ้าน</button></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/utils/SkeletonUtils.js"></script>
+<script src="../shared/data.js"></script>
+<script src="../shared/core.js"></script>
+<script src="js/util.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/models.js"></script>
+<script src="js/world.js"></script>
+<script src="js/puzzles.js"></script>
+<script src="js/game.js"></script>
+<script src="js/net.js"></script>
+<script src="js/entities.js"></script>
+<script src="js/player.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
